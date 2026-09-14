@@ -4,11 +4,14 @@
 // La metadata está vacía (solo estructura) - La IA la llenará después
 // ============================================
 
+import type { TopicCategory } from '../prompts/promptEngine';
+
 export interface SubtemaMetadata {
   id: string;
   title: string;
   path: string;
   emoji: string;
+  category?: TopicCategory; // Se calcula automáticamente si no se define
   
   // === DATOS DEL SUBTEMA (la IA los generará en ambos modos) ===
   metaforaCentral?: string;
@@ -608,4 +611,103 @@ export function getSubtemaById(id: string): SubtemaMetadata | null {
 
 export function countSubtemas(): number {
   return getAllSubtemas().length;
+}
+
+// ============================================
+// CATEGORIZACIÓN AUTOMÁTICA DE SUBTEMAS
+// Determina la categoría según el path del subtema
+// ============================================
+
+export function getCategoryForSubtema(subtema: SubtemaMetadata): TopicCategory {
+  // Si ya tiene categoría definida, usarla
+  if (subtema.category) return subtema.category;
+  
+  const path = subtema.path.toLowerCase();
+  const id = subtema.id.toLowerCase();
+  const title = subtema.title.toLowerCase();
+  
+  // === HISTÓRICOS ===
+  const historicalIds = [
+    'hooke', 'leeuwenhoek', 'brown', 'dujardin', 'purkinje', 
+    'flemming', 'waldeyer', 'knoll-ruska', 'schleiden', 'schwann', 
+    'virchow', 'postulados-4', 'endosimbiosis'
+  ];
+  if (historicalIds.includes(id) || path.includes('antecedentes') || path.includes('padres')) {
+    return 'historical';
+  }
+  
+  // === CLASIFICACIÓN ===
+  const classificationIds = [
+    'autotrofas', 'fotosinteticas', 'quimiosinteticas', 'heterotrofas',
+    'holozoicas', 'saprofitas', 'parasitas', 'mixotrofas',
+    'procariotas', 'eucariotas', 'gram-positivas', 'gram-negativas',
+    'mycoplasma', 'leucoplastos', 'cromoplastos',
+    'eucromatina-heterocromatina'
+  ];
+  if (classificationIds.includes(id) || path.includes('clasificacion') || path.includes('evolucion') || path.includes('nutricion')) {
+    return 'classification';
+  }
+  
+  // === PROCESOS ===
+  const processIds = [
+    'difusion-simple', 'difusion-facilitada', 'osmosis',
+    'endocitosis', 'exocitosis', 'fagocitosis', 'pinocitosis',
+    'endocitosis-receptor', 'bombas', 'ciclosis', 'tixotropia'
+  ];
+  if (processIds.includes(id) || path.includes('transporte')) {
+    return 'process';
+  }
+  
+  // === PROPIEDADES ===
+  const propertyIds = [
+    'fluidez', 'permeabilidad', 'asimetria', 'autosellado',
+    'efecto-tyndall', 'movimiento-browniano'
+  ];
+  if (propertyIds.includes(id)) {
+    return 'property';
+  }
+  
+  // === ESTRUCTURAS ===
+  const structureIds = [
+    'mosaico-fluido', 'lipidos-membrana', 'proteinas-membrana', 'glucidos-membrana',
+    'pared-vegetal', 'pared-hongos', 'glucocalix-animal',
+    'pared-bacteriana', 'membrana-procariota',
+    'microtubulos', 'microfilamentos', 'filamentos-intermedios',
+    'carioteca-general', 'cromatina-general', 'niveles-compactacion',
+    'corpúsculo-barr'
+  ];
+  if (structureIds.includes(id) || path.includes('envolturas') || path.includes('pared') || path.includes('modelo')) {
+    return 'structure';
+  }
+  
+  // === ORGANELOS (default para la mayoría) ===
+  const organelleIds = [
+    'rer-general', 'rel-general', 'golgi-general',
+    'ribosomas-80s', 'ribosomas-70s', 'centrosoma-general',
+    'cilios-flagelos-general', 'vacuolas-general', 'lisosomas-general',
+    'peroxisomas-general', 'glioxisomas-general',
+    'cloroplastos', 'mitocondrias-general',
+    'nucleolo-general', 'carioplasma-general',
+    'procariota-general', 'citoplasma-procariota', 'nucleoide',
+    'capsula', 'flagelos-bacterianos', 'fimbrias', 'pili-sexual',
+    'plasmidos', 'endosporas', 'inclusiones',
+    'citosol-general'
+  ];
+  if (organelleIds.includes(id) || path.includes('endomembranas') || path.includes('bimembranosos') || path.includes('monomembranosos') || path.includes('amembranosos')) {
+    return 'organelle';
+  }
+  
+  // Default: si está en citologia-2 y no se clasificó, es organelle
+  if (path.startsWith('citologia-2')) return 'organelle';
+  
+  // Default para citologia-1 no clasificado
+  return 'structure';
+}
+
+// Función helper para obtener subtema con categoría resuelta
+export function getSubtemaWithCategory(subtema: SubtemaMetadata): SubtemaMetadata & { category: TopicCategory } {
+  return {
+    ...subtema,
+    category: getCategoryForSubtema(subtema)
+  };
 }
