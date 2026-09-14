@@ -582,6 +582,24 @@ const parte2: Parte = {
           ]
         }
       ]
+    },
+    
+    // TEMA 7: COMPARACIÓN CELULAR (CIERRE)
+    {
+      id: "comparativa",
+      title: "Comparación Celular",
+      emoji: "⚖️",
+      color: "from-teal-500 to-cyan-600",
+      secciones: [
+        {
+          id: "animal-vs-vegetal",
+          title: "Célula Animal vs Célula Vegetal",
+          emoji: "🔬",
+          subtemas: [
+            { id: "comparativa-animal-vegetal", title: "Célula Animal vs Vegetal", emoji: "⚖️", path: "citologia-2/comparativa/animal-vs-vegetal", prerequisitos: ["pared-vegetal", "glucocalix-animal", "centrosoma-general", "vacuolas-general", "glioxisomas-general"], temasRelacionados: ["pared-vegetal", "glucocalix-animal", "centrosoma-general", "cloroplastos", "vacuolas-general", "lisosomas-general"] },
+          ]
+        }
+      ]
     }
   ]
 };
@@ -642,9 +660,9 @@ export function getCategoryForSubtema(subtema: SubtemaMetadata): TopicCategory {
     'holozoicas', 'saprofitas', 'parasitas', 'mixotrofas',
     'procariotas', 'eucariotas', 'gram-positivas', 'gram-negativas',
     'mycoplasma', 'leucoplastos', 'cromoplastos',
-    'eucromatina-heterocromatina'
+    'eucromatina-heterocromatina', 'comparativa-animal-vegetal'
   ];
-  if (classificationIds.includes(id) || path.includes('clasificacion') || path.includes('evolucion') || path.includes('nutricion')) {
+  if (classificationIds.includes(id) || path.includes('clasificacion') || path.includes('evolucion') || path.includes('nutricion') || path.includes('comparativa')) {
     return 'classification';
   }
   

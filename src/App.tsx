@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { estructuraCompleta, Parte, Tema, Seccion, SubtemaMetadata, countSubtemas, getCategoryForSubtema } from './data/esqueletoCompleto';
 import type { TopicCategory, LearningPhase } from './prompts/promptEngine';
-import { BookOpen, ChevronRight, Lightbulb, Microscope, ArrowLeft, Search, GraduationCap, Sprout, Search as SearchIcon, Lightbulb as LightbulbIcon, Brain } from 'lucide-react';
+import { BookOpen, ChevronRight, Lightbulb, Microscope, ArrowLeft, Search, GraduationCap, Sprout, Search as SearchIcon, Lightbulb as LightbulbIcon, Brain, MessageCircle, Trophy } from 'lucide-react';
+import Quiz from './components/Quiz';
+import Chat from './components/Chat';
 
 type ViewMode = 'intuitive' | 'precision';
 type NavigationState = 
@@ -63,6 +65,8 @@ export default function App() {
   const [nav, setNav] = useState<NavigationState>({ view: 'home' });
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPhase, setCurrentPhase] = useState<LearningPhase>('discover');
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [showChat, setShowChat] = useState(false);
 
   const totalSubtemas = countSubtemas();
 
@@ -179,11 +183,42 @@ export default function App() {
           )}
           {nav.view === 'subtema' && (
             <motion.div key="subtema" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }}>
-              <SubtemaView viewMode={viewMode} subtema={nav.subtema} currentPhase={currentPhase} setCurrentPhase={setCurrentPhase} />
+              <SubtemaView 
+                viewMode={viewMode} 
+                subtema={nav.subtema} 
+                currentPhase={currentPhase} 
+                setCurrentPhase={setCurrentPhase}
+                onOpenQuiz={() => setShowQuiz(true)}
+                onOpenChat={() => setShowChat(true)}
+              />
             </motion.div>
           )}
         </AnimatePresence>
       </main>
+
+      {/* Quiz Modal */}
+      <AnimatePresence>
+        {showQuiz && nav.view === 'subtema' && (
+          <Quiz
+            subtemaId={nav.subtema.id}
+            subtemaTitle={nav.subtema.title}
+            viewMode={viewMode}
+            onClose={() => setShowQuiz(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Chat Modal */}
+      <AnimatePresence>
+        {showChat && nav.view === 'subtema' && (
+          <Chat
+            subtemaId={nav.subtema.id}
+            subtemaTitle={nav.subtema.title}
+            viewMode={viewMode}
+            onClose={() => setShowChat(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Footer */}
       <footer className={`border-t py-8 transition-colors duration-300 ${
@@ -495,11 +530,13 @@ function SeccionView({ viewMode, parte, tema, seccion, onNavigate }: { viewMode:
 // ============================================
 // SUBTEMA VIEW — CON NAVEGACIÓN POR FASES
 // ============================================
-function SubtemaView({ viewMode, subtema, currentPhase, setCurrentPhase }: { 
+function SubtemaView({ viewMode, subtema, currentPhase, setCurrentPhase, onOpenQuiz, onOpenChat }: { 
   viewMode: ViewMode; 
   subtema: SubtemaMetadata;
   currentPhase: LearningPhase;
   setCurrentPhase: (phase: LearningPhase) => void;
+  onOpenQuiz: () => void;
+  onOpenChat: () => void;
 }) {
   const category = getCategoryForSubtema(subtema);
   const content = getDemoContent(subtema, currentPhase, viewMode);
@@ -680,6 +717,52 @@ function SubtemaView({ viewMode, subtema, currentPhase, setCurrentPhase }: {
           </div>
         </motion.div>
       </AnimatePresence>
+
+      {/* Botones de Quiz y Chat */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4"
+      >
+        <button
+          onClick={onOpenQuiz}
+          className={`p-5 rounded-xl border text-left transition-all ${
+            viewMode === 'intuitive'
+              ? 'bg-white border-gray-200 hover:border-[#10B981] hover:shadow-sm'
+              : 'bg-[#1E293B] border-[#334155] hover:border-[#3B82F6]'
+          }`}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <Trophy className={`w-6 h-6 ${viewMode === 'intuitive' ? 'text-[#10B981]' : 'text-[#3B82F6]'}`} />
+            <h4 className={`font-semibold ${viewMode === 'intuitive' ? 'text-gray-900' : 'text-gray-100'}`}>
+              Poner a prueba lo aprendido
+            </h4>
+          </div>
+          <p className={`text-sm ${viewMode === 'intuitive' ? 'text-gray-600' : 'text-gray-400'}`}>
+            Responde preguntas generadas por IA y avanza de nivel
+          </p>
+        </button>
+
+        <button
+          onClick={onOpenChat}
+          className={`p-5 rounded-xl border text-left transition-all ${
+            viewMode === 'intuitive'
+              ? 'bg-white border-gray-200 hover:border-[#10B981] hover:shadow-sm'
+              : 'bg-[#1E293B] border-[#334155] hover:border-[#3B82F6]'
+          }`}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <MessageCircle className={`w-6 h-6 ${viewMode === 'intuitive' ? 'text-[#10B981]' : 'text-[#3B82F6]'}`} />
+            <h4 className={`font-semibold ${viewMode === 'intuitive' ? 'text-gray-900' : 'text-gray-100'}`}>
+              ¿Tienes dudas?
+            </h4>
+          </div>
+          <p className={`text-sm ${viewMode === 'intuitive' ? 'text-gray-600' : 'text-gray-400'}`}>
+            Pregunta directamente a la IA sobre este tema
+          </p>
+        </button>
+      </motion.div>
 
       {/* Info de temas relacionados */}
       {subtema.temasRelacionados.length > 0 && (
