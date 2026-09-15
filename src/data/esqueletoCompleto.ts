@@ -454,10 +454,10 @@ const parte2: Parte = {
       ]
     },
     
-    // TEMA 4: ORGANELOS MONOMEMBRANOSOS
+    // TEMA 4: ORGANELOS MONOMEMBRANOSOS (CITOMAS)
     {
       id: "monomembranosos",
-      title: "Organelos Monomembranosos",
+      title: "Organelos Monomembranosos (Citomas)",
       emoji: "🫧",
       color: "from-pink-500 to-rose-600",
       secciones: [
