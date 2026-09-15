@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { estructuraCompleta, Parte, Tema, Seccion, SubtemaMetadata, countSubtemas, getCategoryForSubtema } from './data/esqueletoCompleto';
 import type { TopicCategory, LearningPhase } from './prompts/promptEngine';
-import { BookOpen, ChevronRight, Lightbulb, Microscope, ArrowLeft, Search, GraduationCap, Sprout, Search as SearchIcon, Lightbulb as LightbulbIcon, Brain, MessageCircle, Trophy } from 'lucide-react';
+import { BookOpen, ChevronRight, Lightbulb, Microscope, ArrowLeft, Search, GraduationCap, MessageCircle, Trophy } from 'lucide-react';
 import Quiz from './components/Quiz';
 import Chat from './components/Chat';
+import MarkdownRenderer from './components/MarkdownRenderer';
+import { getMockContent } from './data/mockData';
 
 type ViewMode = 'intuitive' | 'precision';
 type NavigationState = 
@@ -14,33 +16,9 @@ type NavigationState =
   | { view: 'seccion'; parte: Parte; tema: Tema; seccion: Seccion }
   | { view: 'subtema'; parte: Parte; tema: Tema; seccion: Seccion; subtema: SubtemaMetadata };
 
-// Contenido demo para cada fase (simula lo que generaría la IA)
+// Contenido demo para cada fase (usa contenido mockeado en Markdown)
 function getDemoContent(subtema: SubtemaMetadata, phase: LearningPhase, mode: ViewMode): string {
-  const category = getCategoryForSubtema(subtema);
-  const title = subtema.title;
-  
-  const demoContents: Record<string, Record<LearningPhase, Record<ViewMode, string>>> = {
-    default: {
-      discover: {
-        intuitive: `Imagina que ${title} es como una pieza clave en una máquina compleja. Sin esta pieza, todo el sistema se detendría. En las próximas fases descubrirás exactamente qué hace, cómo funciona y por qué es tan importante para la vida celular.`,
-        precision: `${title}: Componente/Proceso fundamental en biología celular. Categoría: ${category}. Función principal: mantiene la homeostasis celular y permite la supervivencia del organismo. Esencial para comprender la organización de la célula eucariota.`
-      },
-      explore: {
-        intuitive: `Piensa en ${title} como si fuera una fábrica especializada dentro de una gran ciudad industrial (la célula). Cada fábrica tiene su propio diseño, sus trabajadores y su misión específica. Esta en particular se encarga de una tarea que ninguna otra puede hacer. Su estructura está optimizada para maximizar su eficiencia, con compartimentos separados para cada proceso.`,
-        precision: `Estructura de ${title}:\n• Organización interna especializada\n• Componentes moleculares específicos\n• Localización definida en la célula\n• Interconexión con otros sistemas celulares\n\nSe relaciona físicamente con otros organelos del sistema de endomembranas, formando una red integrada de producción y distribución.`
-      },
-      understand: {
-        intuitive: `¿Para qué sirve realmente ${title}? Imagina tu cuerpo como una ciudad que nunca duerbe. Cada célula es un barrio, y dentro de cada barrio hay trabajadores especializados. ${title} es el departamento que se encarga de que todo funcione sin problemas.\n\n1. Cuando comes: procesa los nutrientes que llegan\n2. Cuando te mueves: provee la energía necesaria\n3. Cuando creces: fabrica los componentes nuevos\n4. Cuando te defiendes: participa en la respuesta inmune\n5. Cuando descansas: repara y recicla materiales\n\n💡 ¿Te has fijado que cuando haces ejercicio intenso, tus músculos "arden"? Eso es en parte porque estos procesos trabajan a máxima capacidad produciendo energía.`,
-        precision: `Funciones principales:\n• Síntesis de componentes celulares esenciales\n• Procesamiento y modificación de moléculas\n• Almacenamiento temporal de productos\n• Transporte dirigido a destinos específicos\n\n¿DÓNDE PARTICIPA? (5 ejemplos):\n1. Células hepáticas: detoxificación y metabolismo\n2. Neuronas: producción de neurotransmisores\n3. Células musculares: contracción y movimiento\n4. Células glandulares: secreción de hormonas\n5. Células inmunes: respuesta defense\n\n💡 Dato: Sin este proceso, las células no podrían mantener su organización interna y morirían en minutos.`
-      },
-      master: {
-        intuitive: `Ahora que entiendes ${title} a profundidad, aquí van los secretos que te harán destacar:\n\n🔑 La clave: Todo se conecta. Este proceso no trabaja solo — está en comunicación constante con el núcleo, la membrana y otros organelos. Si uno falla, todos sufren.\n\n🧠 Para recordar: Piensa en una cadena de montaje. Cada eslabón depende del anterior. Si removes uno, la producción se detiene.\n\n⚡ Dato memorable: Las células de tu intestino se renuevan cada 3-5 días. Eso significa que ${title} está trabajando sin parar para fabricar células nuevas constantemente.`,
-        precision: `⚠️ TRAMPAS DE EXAMEN:\n\nTrampa 1: "${title} solo existe en células animales"\n→ FALSO. También existe en células vegetales, aunque con diferencias estructurales.\n\nTrampa 2: "Se encuentra solo en el citoplasma"\n→ FALSO. Está asociado a otros organelos y puede encontrarse en diferentes localizaciones según el tipo celular.\n\nTrampa 3: "Su función es idéntica en todos los tejidos"\n→ FALSO. Se especializa según el tejido (ej: hepatocitos vs neuronas vs miocitos).\n\n📝 RESUMEN MENTAL (4 líneas):\n• ${category === 'organelle' ? 'Organelo del sistema de endomembranas' : 'Proceso/Estructura fundamental'}\n• Función principal: mantenimiento de la homeostasis\n• Se especializa según el tipo de tejido\n• Interconectado con toda la maquinaria celular\n\n💡 RETO MENTAL:\nSi una mutación afecta la estructura de ${title}, ¿qué consecuencias tendría para la célula completa?\n\nRespuesta: Al fallar este componente, se afectaría la cadena de producción completa: acumulación de materiales sin procesar, déficit de productos necesarios, y eventualmente muerte celular por fallo sistémico.`
-      }
-    }
-  };
-  
-  return demoContents.default[phase][mode];
+  return getMockContent(subtema.id, phase, mode);
 }
 
 // Fase info
@@ -651,11 +629,7 @@ function SubtemaView({ viewMode, subtema, currentPhase, setCurrentPhase, onOpenQ
 
           {/* Cuerpo del contenido */}
           <div className="p-6 sm:p-8">
-            <div className={`whitespace-pre-line leading-relaxed text-sm sm:text-base ${
-              viewMode === 'intuitive' ? 'text-gray-700' : 'text-gray-300'
-            }`}>
-              {content}
-            </div>
+            <MarkdownRenderer content={content} viewMode={viewMode} />
           </div>
 
           {/* Footer con navegación */}
