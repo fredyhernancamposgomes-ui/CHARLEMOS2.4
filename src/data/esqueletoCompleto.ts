@@ -454,27 +454,19 @@ const parte2: Parte = {
       ]
     },
     
-    // TEMA 4: ORGANELOS MONOMEMBRANOSOS (CITOSOMAS)
+    // TEMA 4: CITOSOMAS (Organelos del Golgisoma)
     {
-      id: "monomembranosos",
-      title: "Organelos Monomembranosos (Citosomas)",
+      id: "citosomas",
+      title: "Citosomas (Organelos del Golgisoma)",
       emoji: "🫧",
       color: "from-pink-500 to-rose-600",
       secciones: [
-        {
-          id: "vacuolas",
-          title: "Vacuolas",
-          emoji: "💧",
-          subtemas: [
-            { id: "vacuolas-general", title: "Vacuolas", emoji: "🎈", path: "citologia-2/monomembranosos/vacuolas/general", prerequisitos: [], temasRelacionados: [] },
-          ]
-        },
         {
           id: "lisosomas",
           title: "Lisosomas",
           emoji: "🗑️",
           subtemas: [
-            { id: "lisosomas-general", title: "Lisosomas", emoji: "🧪", path: "citologia-2/monomembranosos/lisosomas/general", prerequisitos: ["golgi"], temasRelacionados: [] },
+            { id: "lisosomas-general", title: "Lisosomas", emoji: "🧪", path: "citologia-2/citosomas/lisosomas/general", prerequisitos: ["golgi-general"], temasRelacionados: ["peroxisomas-general", "fagocitosis"] },
           ]
         },
         {
@@ -482,7 +474,7 @@ const parte2: Parte = {
           title: "Peroxisomas",
           emoji: "⚗️",
           subtemas: [
-            { id: "peroxisomas-general", title: "Peroxisomas", emoji: "🧫", path: "citologia-2/monomembranosos/peroxisomas/general", prerequisitos: [], temasRelacionados: ["glioxisomas"] },
+            { id: "peroxisomas-general", title: "Peroxisomas", emoji: "🧫", path: "citologia-2/citosomas/peroxisomas/general", prerequisitos: [], temasRelacionados: ["glioxisomas-general", "lisosomas-general"] },
           ]
         },
         {
@@ -490,13 +482,31 @@ const parte2: Parte = {
           title: "Glioxisomas",
           emoji: "🌱",
           subtemas: [
-            { id: "glioxisomas-general", title: "Glioxisomas", emoji: "🌿", path: "citologia-2/monomembranosos/glioxisomas/general", prerequisitos: ["peroxisomas"], temasRelacionados: ["peroxisomas"] },
+            { id: "glioxisomas-general", title: "Glioxisomas", emoji: "🌿", path: "citologia-2/citosomas/glioxisomas/general", prerequisitos: ["peroxisomas-general"], temasRelacionados: ["peroxisomas-general"] },
           ]
         }
       ]
     },
     
-    // TEMA 5: ORGANELOS BIMEMBRANOSOS
+    // TEMA 5: VACUOLAS
+    {
+      id: "vacuolas",
+      title: "Vacuolas",
+      emoji: "🎈",
+      color: "from-blue-400 to-indigo-500",
+      secciones: [
+        {
+          id: "vacuolas-general",
+          title: "Vacuolas",
+          emoji: "💧",
+          subtemas: [
+            { id: "vacuolas-general-subtema", title: "Vacuolas", emoji: "🎈", path: "citologia-2/vacuolas/general", prerequisitos: [], temasRelacionados: ["pared-vegetal", "citosomas"] },
+          ]
+        }
+      ]
+    },
+    
+    // TEMA 6: ORGANELOS BIMEMBRANOSOS
     {
       id: "bimembranosos",
       title: "Organelos Bimembranosos",
@@ -532,7 +542,7 @@ const parte2: Parte = {
       ]
     },
     
-    // TEMA 6: NÚCLEO INTERFÁSICO
+    // TEMA 7: NÚCLEO INTERFÁSICO
     {
       id: "nucleo",
       title: "Núcleo Interfásico",
@@ -584,7 +594,7 @@ const parte2: Parte = {
       ]
     },
     
-    // TEMA 7: COMPARACIÓN CELULAR (CIERRE)
+    // TEMA 8: COMPARACIÓN CELULAR (CIERRE)
     {
       id: "comparativa",
       title: "Comparación Celular",
@@ -717,6 +727,9 @@ export function getCategoryForSubtema(subtema: SubtemaMetadata): TopicCategory {
   
   // Default: si está en citologia-2 y no se clasificó, es organelle
   if (path.startsWith('citologia-2')) return 'organelle';
+  
+  // Vacuolas es organelo
+  if (path.includes('vacuolas')) return 'organelle';
   
   // Default para citologia-1 no clasificado
   return 'structure';
