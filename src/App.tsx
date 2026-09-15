@@ -66,70 +66,94 @@ export default function App() {
       viewMode === 'intuitive' ? 'bg-[#FAFAFA]' : 'bg-[#0F172A]'
     }`}>
       {/* Header */}
-      <header className={`sticky top-0 z-50 backdrop-blur-md border-b transition-colors duration-300 ${
+      <header className={`sticky top-0 z-50 backdrop-blur-xl border-b transition-all duration-300 ${
         viewMode === 'intuitive' 
-          ? 'bg-white/80 border-gray-200' 
-          : 'bg-[#0F172A]/80 border-[#1E293B]'
+          ? 'bg-white/90 border-gray-200/50 shadow-sm' 
+          : 'bg-[#0F172A]/90 border-[#1E293B]/50 shadow-lg shadow-black/20'
       }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3 min-w-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          {/* Top row: Logo + Back button */}
+          <div className="flex items-center justify-between py-3 sm:py-4">
+            <div className="flex items-center gap-3">
               {nav.view !== 'home' && (
                 <motion.button 
                   onClick={goBack}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
+                  className={`w-11 h-11 flex items-center justify-center rounded-xl transition-all ${
                     viewMode === 'intuitive' 
-                      ? 'hover:bg-gray-100 text-gray-600' 
-                      : 'hover:bg-[#1E293B] text-gray-400'
+                      ? 'hover:bg-gray-100 text-gray-600 active:bg-gray-200' 
+                      : 'hover:bg-[#1E293B] text-gray-400 active:bg-[#334155]'
                   }`}
                 >
                   <ArrowLeft className="w-5 h-5" />
                 </motion.button>
               )}
-              <BookOpen className={`w-6 h-6 flex-shrink-0 ${
-                viewMode === 'intuitive' ? 'text-[#10B981]' : 'text-[#3B82F6]'
-              }`} />
-              <div className="min-w-0">
-                <h1 className={`text-lg sm:text-xl font-semibold truncate ${
-                  viewMode === 'intuitive' ? 'text-gray-900' : 'text-gray-100'
+              
+              {/* Logo */}
+              <div className="flex items-center gap-2.5">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                  viewMode === 'intuitive' 
+                    ? 'bg-gradient-to-br from-[#10B981] to-[#059669]' 
+                    : 'bg-gradient-to-br from-[#3B82F6] to-[#2563EB]'
                 }`}>
-                  Charlemos 2.0
-                </h1>
-                <p className={`text-xs ${
-                  viewMode === 'intuitive' ? 'text-gray-500' : 'text-gray-400'
-                }`}>
-                  {totalSubtemas} subtemas • v4.0
-                </p>
+                  <span className="text-white text-xl">🧬</span>
+                </div>
+                <div>
+                  <h1 className={`text-xl sm:text-2xl font-bold tracking-tight ${
+                    viewMode === 'intuitive' ? 'text-gray-900' : 'text-white'
+                  }`}>
+                    CHARLEMOS
+                  </h1>
+                  <p className={`text-[10px] sm:text-xs font-medium tracking-wide uppercase ${
+                    viewMode === 'intuitive' ? 'text-gray-500' : 'text-gray-400'
+                  }`}>
+                    Biología Celular
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Toggle de modos */}
-            <div className={`flex items-center gap-1 p-1 rounded-lg flex-shrink-0 ${
-              viewMode === 'intuitive' ? 'bg-gray-100' : 'bg-[#1E293B]'
+            {/* Stats badge (solo en home) */}
+            {nav.view === 'home' && (
+              <div className={`hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium ${
+                viewMode === 'intuitive' 
+                  ? 'bg-[#10B981]/10 text-[#10B981]' 
+                  : 'bg-[#3B82F6]/10 text-[#3B82F6]'
+              }`}>
+                <span>{totalSubtemas} temas</span>
+              </div>
+            )}
+          </div>
+
+          {/* Bottom row: Mode toggle */}
+          <div className="pb-3 sm:pb-4">
+            <div className={`flex items-center gap-2 p-1.5 rounded-2xl ${
+              viewMode === 'intuitive' 
+                ? 'bg-gray-100/80' 
+                : 'bg-[#1E293B]/80'
             }`}>
               <button
                 onClick={() => setViewMode('intuitive')}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all ${
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
                   viewMode === 'intuitive'
-                    ? 'bg-white text-[#10B981] shadow-sm'
-                    : 'text-gray-400 hover:text-gray-300'
+                    ? 'bg-white text-[#10B981] shadow-md shadow-[#10B981]/10'
+                    : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
-                <Lightbulb className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">Intuitivo</span>
+                <Lightbulb className="w-5 h-5" />
+                <span>Intuitivo</span>
               </button>
               <button
                 onClick={() => setViewMode('precision')}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all ${
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
                   viewMode === 'precision'
-                    ? 'bg-[#0F172A] text-[#3B82F6] shadow-sm'
-                    : 'text-gray-400 hover:text-gray-300'
+                    ? 'bg-[#0F172A] text-[#3B82F6] shadow-md shadow-[#3B82F6]/10'
+                    : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
-                <Microscope className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">Precisión</span>
+                <Microscope className="w-5 h-5" />
+                <span>Precisión</span>
               </button>
             </div>
           </div>
@@ -542,55 +566,138 @@ function SubtemaView({ viewMode, subtema, currentPhase, setCurrentPhase, onOpenQ
         </div>
       </motion.div>
 
-      {/* Navegación por Fases */}
+      {/* Navegación por Fases - Optimizada para móvil */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className={`mb-8 p-4 rounded-xl border ${
+        className={`mb-6 sm:mb-8 p-4 sm:p-5 rounded-2xl border ${
           viewMode === 'intuitive' ? 'bg-white border-gray-200' : 'bg-[#1E293B] border-[#334155]'
         }`}
       >
-        <p className={`text-xs font-medium mb-3 ${viewMode === 'intuitive' ? 'text-gray-500' : 'text-gray-400'}`}>
-          PROGRESIÓN DE APRENDIZAJE
-        </p>
-        <div className="flex items-center gap-1 sm:gap-2">
-          {PHASES.map((phase, index) => (
+        {/* Desktop: Mostrar todas las fases */}
+        <div className="hidden sm:block">
+          <p className={`text-xs font-medium mb-3 ${viewMode === 'intuitive' ? 'text-gray-500' : 'text-gray-400'}`}>
+            PROGRESIÓN DE APRENDIZAJE
+          </p>
+          <div className="flex items-center gap-2">
+            {PHASES.map((phase, index) => (
+              <button
+                key={phase.id}
+                onClick={() => setCurrentPhase(phase.id)}
+                className={`flex-1 flex flex-col items-center gap-1 p-3 rounded-xl transition-all text-center ${
+                  currentPhase === phase.id
+                    ? viewMode === 'intuitive'
+                      ? 'bg-[#10B981]/10 border-2 border-[#10B981]/30'
+                      : 'bg-[#3B82F6]/10 border-2 border-[#3B82F6]/30'
+                    : viewMode === 'intuitive'
+                      ? 'hover:bg-gray-50 border-2 border-transparent'
+                      : 'hover:bg-[#0F172A] border-2 border-transparent'
+                }`}
+              >
+                <span className="text-2xl">{phase.emoji}</span>
+                <span className={`text-sm font-semibold ${
+                  currentPhase === phase.id
+                    ? viewMode === 'intuitive' ? 'text-[#10B981]' : 'text-[#3B82F6]'
+                    : viewMode === 'intuitive' ? 'text-gray-600' : 'text-gray-400'
+                }`}>
+                  {phase.name}
+                </span>
+                <span className={`text-xs ${viewMode === 'intuitive' ? 'text-gray-400' : 'text-gray-500'}`}>
+                  {phase.duration}
+                </span>
+              </button>
+            ))}
+          </div>
+          {/* Barra de progreso */}
+          <div className={`mt-4 h-1.5 rounded-full ${viewMode === 'intuitive' ? 'bg-gray-100' : 'bg-[#334155]'}`}>
+            <motion.div
+              className={`h-full rounded-full ${viewMode === 'intuitive' ? 'bg-[#10B981]' : 'bg-[#3B82F6]'}`}
+              initial={{ width: 0 }}
+              animate={{ width: `${((currentPhaseIndex + 1) / PHASES.length) * 100}%` }}
+              transition={{ duration: 0.3 }}
+            />
+          </div>
+        </div>
+
+        {/* Mobile: Navegación simplificada */}
+        <div className="sm:hidden">
+          <div className="flex items-center justify-between gap-3">
+            {/* Botón anterior */}
             <button
-              key={phase.id}
-              onClick={() => setCurrentPhase(phase.id)}
-              className={`flex-1 flex flex-col items-center gap-1 p-2 sm:p-3 rounded-lg transition-all text-center ${
-                currentPhase === phase.id
-                  ? viewMode === 'intuitive'
-                    ? 'bg-[#10B981]/10 border border-[#10B981]/30'
-                    : 'bg-[#3B82F6]/10 border border-[#3B82F6]/30'
+              onClick={() => {
+                const prevIndex = currentPhaseIndex - 1;
+                if (prevIndex >= 0) setCurrentPhase(PHASES[prevIndex].id);
+              }}
+              disabled={currentPhaseIndex === 0}
+              className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${
+                currentPhaseIndex === 0
+                  ? 'opacity-30 cursor-not-allowed'
                   : viewMode === 'intuitive'
-                    ? 'hover:bg-gray-50 border border-transparent'
-                    : 'hover:bg-[#0F172A] border border-transparent'
+                    ? 'bg-gray-100 text-gray-600 active:bg-gray-200'
+                    : 'bg-[#0F172A] text-gray-400 active:bg-[#334155]'
               }`}
             >
-              <span className="text-lg sm:text-xl">{phase.emoji}</span>
-              <span className={`text-xs font-medium ${
-                currentPhase === phase.id
-                  ? viewMode === 'intuitive' ? 'text-[#10B981]' : 'text-[#3B82F6]'
-                  : viewMode === 'intuitive' ? 'text-gray-600' : 'text-gray-400'
-              }`}>
-                {phase.name}
-              </span>
-              <span className={`text-[10px] hidden sm:block ${viewMode === 'intuitive' ? 'text-gray-400' : 'text-gray-500'}`}>
-                {phase.duration}
-              </span>
+              <ArrowLeft className="w-5 h-5" />
             </button>
-          ))}
-        </div>
-        {/* Barra de progreso */}
-        <div className={`mt-3 h-1 rounded-full ${viewMode === 'intuitive' ? 'bg-gray-100' : 'bg-[#334155]'}`}>
-          <motion.div
-            className={`h-full rounded-full ${viewMode === 'intuitive' ? 'bg-[#10B981]' : 'bg-[#3B82F6]'}`}
-            initial={{ width: 0 }}
-            animate={{ width: `${((currentPhaseIndex + 1) / PHASES.length) * 100}%` }}
-            transition={{ duration: 0.3 }}
-          />
+
+            {/* Fase actual */}
+            <div className="flex-1 text-center">
+              <div className="text-3xl mb-1">{PHASES[currentPhaseIndex].emoji}</div>
+              <div className={`text-base font-bold ${
+                viewMode === 'intuitive' ? 'text-[#10B981]' : 'text-[#3B82F6]'
+              }`}>
+                {PHASES[currentPhaseIndex].name}
+              </div>
+              <div className={`text-xs ${viewMode === 'intuitive' ? 'text-gray-500' : 'text-gray-400'}`}>
+                {PHASES[currentPhaseIndex].duration} • {currentPhaseIndex + 1}/{PHASES.length}
+              </div>
+            </div>
+
+            {/* Botón siguiente */}
+            <button
+              onClick={() => {
+                const nextIndex = currentPhaseIndex + 1;
+                if (nextIndex < PHASES.length) setCurrentPhase(PHASES[nextIndex].id);
+              }}
+              disabled={currentPhaseIndex === PHASES.length - 1}
+              className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${
+                currentPhaseIndex === PHASES.length - 1
+                  ? 'opacity-30 cursor-not-allowed'
+                  : viewMode === 'intuitive'
+                    ? 'bg-gray-100 text-gray-600 active:bg-gray-200'
+                    : 'bg-[#0F172A] text-gray-400 active:bg-[#334155]'
+              }`}
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Barra de progreso */}
+          <div className={`mt-4 h-1.5 rounded-full ${viewMode === 'intuitive' ? 'bg-gray-100' : 'bg-[#334155]'}`}>
+            <motion.div
+              className={`h-full rounded-full ${viewMode === 'intuitive' ? 'bg-[#10B981]' : 'bg-[#3B82F6]'}`}
+              initial={{ width: 0 }}
+              animate={{ width: `${((currentPhaseIndex + 1) / PHASES.length) * 100}%` }}
+              transition={{ duration: 0.3 }}
+            />
+          </div>
+
+          {/* Indicadores de fase */}
+          <div className="flex justify-center gap-2 mt-3">
+            {PHASES.map((_, i) => (
+              <div
+                key={i}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  i === currentPhaseIndex
+                    ? viewMode === 'intuitive' ? 'bg-[#10B981] w-6' : 'bg-[#3B82F6] w-6'
+                    : i < currentPhaseIndex
+                      ? viewMode === 'intuitive' ? 'bg-[#10B981]/40' : 'bg-[#3B82F6]/40'
+                      : viewMode === 'intuitive' ? 'bg-gray-200' : 'bg-[#334155]'
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </motion.div>
 
@@ -692,48 +799,70 @@ function SubtemaView({ viewMode, subtema, currentPhase, setCurrentPhase, onOpenQ
         </motion.div>
       </AnimatePresence>
 
-      {/* Botones de Quiz y Chat */}
+      {/* Botones de Quiz y Chat - Optimizados para móvil */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4"
+        className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
       >
         <button
           onClick={onOpenQuiz}
-          className={`p-5 rounded-xl border text-left transition-all ${
+          className={`group p-5 sm:p-6 rounded-2xl border-2 text-left transition-all active:scale-[0.98] ${
             viewMode === 'intuitive'
-              ? 'bg-white border-gray-200 hover:border-[#10B981] hover:shadow-sm'
-              : 'bg-[#1E293B] border-[#334155] hover:border-[#3B82F6]'
+              ? 'bg-white border-gray-200 hover:border-[#10B981] hover:shadow-lg hover:shadow-[#10B981]/10'
+              : 'bg-[#1E293B] border-[#334155] hover:border-[#3B82F6] hover:shadow-lg hover:shadow-[#3B82F6]/10'
           }`}
         >
-          <div className="flex items-center gap-3 mb-2">
-            <Trophy className={`w-6 h-6 ${viewMode === 'intuitive' ? 'text-[#10B981]' : 'text-[#3B82F6]'}`} />
-            <h4 className={`font-semibold ${viewMode === 'intuitive' ? 'text-gray-900' : 'text-gray-100'}`}>
-              Poner a prueba lo aprendido
-            </h4>
+          <div className="flex items-center gap-3 mb-3">
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
+              viewMode === 'intuitive' 
+                ? 'bg-[#10B981]/10 group-hover:bg-[#10B981]/20' 
+                : 'bg-[#3B82F6]/10 group-hover:bg-[#3B82F6]/20'
+            }`}>
+              <Trophy className={`w-6 h-6 ${viewMode === 'intuitive' ? 'text-[#10B981]' : 'text-[#3B82F6]'}`} />
+            </div>
+            <div>
+              <h4 className={`font-bold text-base ${viewMode === 'intuitive' ? 'text-gray-900' : 'text-gray-100'}`}>
+                Quiz
+              </h4>
+              <p className={`text-xs ${viewMode === 'intuitive' ? 'text-gray-500' : 'text-gray-400'}`}>
+                Pon a prueba tu conocimiento
+              </p>
+            </div>
           </div>
-          <p className={`text-sm ${viewMode === 'intuitive' ? 'text-gray-600' : 'text-gray-400'}`}>
-            Responde preguntas generadas por IA y avanza de nivel
+          <p className={`text-sm leading-relaxed ${viewMode === 'intuitive' ? 'text-gray-600' : 'text-gray-400'}`}>
+            Preguntas generadas por IA • 3 niveles de dificultad
           </p>
         </button>
 
         <button
           onClick={onOpenChat}
-          className={`p-5 rounded-xl border text-left transition-all ${
+          className={`group p-5 sm:p-6 rounded-2xl border-2 text-left transition-all active:scale-[0.98] ${
             viewMode === 'intuitive'
-              ? 'bg-white border-gray-200 hover:border-[#10B981] hover:shadow-sm'
-              : 'bg-[#1E293B] border-[#334155] hover:border-[#3B82F6]'
+              ? 'bg-white border-gray-200 hover:border-[#10B981] hover:shadow-lg hover:shadow-[#10B981]/10'
+              : 'bg-[#1E293B] border-[#334155] hover:border-[#3B82F6] hover:shadow-lg hover:shadow-[#3B82F6]/10'
           }`}
         >
-          <div className="flex items-center gap-3 mb-2">
-            <MessageCircle className={`w-6 h-6 ${viewMode === 'intuitive' ? 'text-[#10B981]' : 'text-[#3B82F6]'}`} />
-            <h4 className={`font-semibold ${viewMode === 'intuitive' ? 'text-gray-900' : 'text-gray-100'}`}>
-              ¿Tienes dudas?
-            </h4>
+          <div className="flex items-center gap-3 mb-3">
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
+              viewMode === 'intuitive' 
+                ? 'bg-[#10B981]/10 group-hover:bg-[#10B981]/20' 
+                : 'bg-[#3B82F6]/10 group-hover:bg-[#3B82F6]/20'
+            }`}>
+              <MessageCircle className={`w-6 h-6 ${viewMode === 'intuitive' ? 'text-[#10B981]' : 'text-[#3B82F6]'}`} />
+            </div>
+            <div>
+              <h4 className={`font-bold text-base ${viewMode === 'intuitive' ? 'text-gray-900' : 'text-gray-100'}`}>
+                Chat IA
+              </h4>
+              <p className={`text-xs ${viewMode === 'intuitive' ? 'text-gray-500' : 'text-gray-400'}`}>
+                Resuelve tus dudas al instante
+              </p>
+            </div>
           </div>
-          <p className={`text-sm ${viewMode === 'intuitive' ? 'text-gray-600' : 'text-gray-400'}`}>
-            Pregunta directamente a la IA sobre este tema
+          <p className={`text-sm leading-relaxed ${viewMode === 'intuitive' ? 'text-gray-600' : 'text-gray-400'}`}>
+            Pregunta lo que no entiendas • Respuestas personalizadas
           </p>
         </button>
       </motion.div>

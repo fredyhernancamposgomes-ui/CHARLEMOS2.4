@@ -88,12 +88,14 @@ export default function Quiz({ subtemaId, subtemaTitle, viewMode, onClose }: Qui
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm sm:p-4"
     >
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className={`w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl ${
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 100, opacity: 0 }}
+        transition={{ type: "spring", damping: 25, stiffness: 300 }}
+        className={`w-full sm:max-w-2xl h-full sm:h-auto sm:max-h-[90vh] overflow-y-auto sm:rounded-2xl shadow-2xl ${
           viewMode === 'intuitive' ? 'bg-white' : 'bg-[#1E293B]'
         }`}
       >
